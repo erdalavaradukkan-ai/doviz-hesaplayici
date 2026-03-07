@@ -1,97 +1,532 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>Döviz Hesaplayıcı</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Döviz Hesaplayıcı</title>
+  <style>
+    * { box-sizing: border-box; }
 
-<style>
-body{
-font-family:Arial;
-background:#f4f4f4;
-text-align:center;
-margin-top:60px;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      color: #1f2937;
+    }
 
-.box{
-background:white;
-padding:40px;
-width:320px;
-margin:auto;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+    }
 
-input,button{
-width:100%;
-padding:12px;
-margin-top:10px;
-font-size:16px;
-}
+    .app {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
 
-button{
-background:#222;
-color:white;
-border:none;
-border-radius:5px;
-}
+    .topbar {
+      background: #eef2f7;
+      padding: 16px 20px;
+      border-bottom: 1px solid #d8dee7;
+    }
 
-.result{
-margin-top:20px;
-font-size:20px;
-font-weight:bold;
-}
-</style>
+    .topbar-line {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .topbar-sub {
+      font-size: 16px;
+      color: #4b5563;
+      margin-bottom: 6px;
+    }
+
+    .update-time {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .content {
+      padding: 24px;
+    }
+
+    .currency-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      border: 1px solid #cdd5df;
+      background: #f8fafc;
+      color: #374151;
+      padding: 14px 10px;
+      font-size: 22px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+
+    .field-group {
+      margin-bottom: 16px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #1f2937;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 16px;
+      font-size: 28px;
+      border: 1px solid #cfd8e3;
+      border-radius: 10px;
+      outline: none;
+      background: #ffffff;
+    }
+
+    .field-input:focus {
+      border-color: #2563eb;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 22px 0 24px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-calc {
+      background: #2fa84f;
+      color: #ffffff;
+    }
+
+    .btn-reset {
+      background: #8b98a9;
+      color: #ffffff;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .result-card {
+      background: #f8fafc;
+      border: 1px solid #d9e2ec;
+      border-radius: 12px;
+      padding: 18px;
+      min-height: 120px;
+    }
+
+    .result-card.primary {
+      background: #eef5ff;
+      border-color: #93c5fd;
+    }
+
+    .result-card.green {
+      background: #ecfdf3;
+      border-color: #86efac;
+    }
+
+    .result-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #374151;
+      margin-bottom: 10px;
+    }
+
+    .result-value {
+      font-size: 34px;
+      font-weight: bold;
+      color: #111827;
+      line-height: 1.2;
+    }
+
+    .result-note {
+      font-size: 14px;
+      color: #6b7280;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    .single-row {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+
+      .content {
+        padding: 16px;
+      }
+
+      .topbar-line {
+        font-size: 20px;
+      }
+
+      .field-label {
+        font-size: 18px;
+      }
+
+      .field-input {
+        font-size: 24px;
+        padding: 14px;
+      }
+
+      .btn {
+        font-size: 22px;
+        padding: 14px;
+      }
+
+      .results {
+        grid-template-columns: 1fr;
+      }
+
+      .single-row {
+        grid-column: span 1;
+      }
+
+      .result-value {
+        font-size: 30px;
+      }
+
+      .currency-tabs {
+        gap: 8px;
+      }
+
+      .tab-btn {
+        font-size: 18px;
+        padding: 12px 8px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="container">
+    <div class="app">
+      <div class="topbar">
+        <div class="topbar-line">
+          Piyasa Kuru: <span id="marketRateText">Yükleniyor...</span>
+          &nbsp; • &nbsp;
+          Salon Alış Kuru: <span id="salonRateText">Yükleniyor...</span>
+        </div>
+        <div class="topbar-sub">
+          Salon alış kuru, canlı piyasa kurundan düşülerek hesaplanır.
+        </div>
+        <div class="update-time" id="updateTimeText">Kur bilgisi alınıyor...</div>
+      </div>
 
-<div class="box">
+      <div class="content">
+        <div class="currency-tabs">
+          <button class="tab-btn active" data-currency="EUR" onclick="selectCurrency('EUR')">EURO</button>
+          <button class="tab-btn" data-currency="USD" onclick="selectCurrency('USD')">USD</button>
+          <button class="tab-btn" data-currency="GBP" onclick="selectCurrency('GBP')">GBP</button>
+        </div>
 
-<h2>Euro Hesapla</h2>
+        <div id="errorBox" class="message error"></div>
 
-<input id="tl" placeholder="Hizmet TL fiyatı">
+        <div class="field-group">
+          <label class="field-label" id="amountLabel">İşlem Tutarı (TL)</label>
+          <input class="field-input" id="tlAmount" type="number" step="0.01" placeholder="Örn: 8000">
+        </div>
 
-<input id="kur" placeholder="Euro kuru (örnek 50.20)" value="50.20">
+        <div class="field-group">
+          <label class="field-label" id="paidLabel">Müşteri Verdiği Döviz</label>
+          <input class="field-input" id="paidAmount" type="number" step="0.01" placeholder="Örn: 180">
+        </div>
 
-<input id="verilen" placeholder="Müşteri verdiği € (opsiyonel)">
+        <div class="actions">
+          <button class="btn btn-calc" onclick="calculateAll()">HESAPLA</button>
+          <button class="btn btn-reset" onclick="resetForm()">YENİ HESAP</button>
+        </div>
 
-<button onclick="hesapla()">Hesapla</button>
+        <div class="results">
+          <div class="result-card primary single-row">
+            <div class="result-title">Ödenecek Döviz</div>
+            <div class="result-value" id="payableValue">-</div>
+          </div>
 
-<div class="result" id="sonuc"></div>
+          <div class="result-card">
+            <div class="result-title">Müşteri Verdi</div>
+            <div class="result-value" id="givenValue">-</div>
+          </div>
 
-</div>
+          <div class="result-card">
+            <div class="result-title" id="diffTitle">Para Üstü Döviz</div>
+            <div class="result-value" id="diffValue">-</div>
+          </div>
 
-<script>
+          <div class="result-card green single-row">
+            <div class="result-title" id="tlTitle">TL Para Üstü</div>
+            <div class="result-value" id="tlValue">-</div>
+            <div class="result-note" id="tlNote">
+              TL tutar tam sayıya yuvarlanır.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-function hesapla(){
+  <script>
+    let selectedCurrency = 'EUR';
+    let marketRates = {
+      EUR: null,
+      USD: null,
+      GBP: null
+    };
 
-var tl = parseFloat(document.getElementById("tl").value);
+    function currencySymbol(code) {
+      if (code === 'EUR') return '€';
+      if (code === 'USD') return '$';
+      if (code === 'GBP') return '£';
+      return '';
+    }
 
-var kur = parseFloat(document.getElementById("kur").value);
+    function salonDiscount(code) {
+      if (code === 'EUR') return 1.00;
+      if (code === 'USD') return 1.00;
+      if (code === 'GBP') return 1.26;
+      return 0;
+    }
 
-var verilen = parseFloat(document.getElementById("verilen").value);
+    function getSalonRate(code) {
+      const market = marketRates[code];
+      if (market == null) return null;
+      return Math.max(0, market - salonDiscount(code));
+    }
 
-var gerekenEuro = tl / kur;
+    function formatMoney(value, digits = 2) {
+      return Number(value).toLocaleString('tr-TR', {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      });
+    }
 
-var sonuc = "Gereken €: " + gerekenEuro.toFixed(2);
+    function roundTl(value) {
+      return Math.round(value);
+    }
 
-if(verilen){
+    function showError(message) {
+      const box = document.getElementById('errorBox');
+      box.textContent = message;
+      box.style.display = 'block';
+    }
 
-var paraUstuEuro = verilen - gerekenEuro;
+    function clearError() {
+      const box = document.getElementById('errorBox');
+      box.textContent = '';
+      box.style.display = 'none';
+    }
 
-var paraUstuTL = paraUstuEuro * kur;
+    function updateTopBar() {
+      const market = marketRates[selectedCurrency];
+      const salon = getSalonRate(selectedCurrency);
 
-sonuc += "<br>Para üstü €: " + paraUstuEuro.toFixed(2);
+      if (market == null || salon == null) {
+        document.getElementById('marketRateText').textContent = 'Yükleniyor...';
+        document.getElementById('salonRateText').textContent = 'Yükleniyor...';
+        return;
+      }
 
-sonuc += "<br>TL iade: " + paraUstuTL.toFixed(0) + " TL";
+      document.getElementById('marketRateText').textContent = formatMoney(market, 2) + ' TL';
+      document.getElementById('salonRateText').textContent = formatMoney(salon, 2) + ' TL';
+    }
 
-}
+    function updateLabels() {
+      const symbol = currencySymbol(selectedCurrency);
+      document.getElementById('paidLabel').textContent = 'Müşteri Verdiği Döviz (' + symbol + ')';
+    }
 
-document.getElementById("sonuc").innerHTML = sonuc;
+    function selectCurrency(code) {
+      selectedCurrency = code;
 
-}
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
 
-</script>
+      document.querySelector('.tab-btn[data-currency="' + code + '"]').classList.add('active');
 
+      updateTopBar();
+      updateLabels();
+      resetResultsOnly();
+      clearError();
+    }
+
+    function resetResultsOnly() {
+      document.getElementById('payableValue').textContent = '-';
+      document.getElementById('givenValue').textContent = '-';
+      document.getElementById('diffTitle').textContent = 'Para Üstü Döviz';
+      document.getElementById('diffValue').textContent = '-';
+      document.getElementById('tlTitle').textContent = 'TL Para Üstü';
+      document.getElementById('tlValue').textContent = '-';
+      document.getElementById('tlNote').textContent = 'TL tutar tam sayıya yuvarlanır.';
+    }
+
+    function resetForm() {
+      document.getElementById('tlAmount').value = '';
+      document.getElementById('paidAmount').value = '';
+      resetResultsOnly();
+      clearError();
+      document.getElementById('tlAmount').focus();
+    }
+
+    async function fetchRates() {
+      try {
+        clearError();
+
+        const response = await fetch('https://api.frankfurter.dev/v1/latest?base=EUR&symbols=TRY,USD,GBP');
+        const data = await response.json();
+
+        const eurTry = data.rates.TRY;
+        const eurUsd = data.rates.USD;
+        const eurGbp = data.rates.GBP;
+
+        marketRates.EUR = eurTry;
+        marketRates.USD = eurTry / eurUsd;
+        marketRates.GBP = eurTry / eurGbp;
+
+        updateTopBar();
+
+        const now = new Date();
+        const timeText = now.toLocaleTimeString('tr-TR', {
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        document.getElementById('updateTimeText').textContent =
+          'Canlı piyasa kuru güncellendi: ' + timeText;
+      } catch (error) {
+        showError('Canlı kur alınamadı. İnternet bağlantısını kontrol edin.');
+        document.getElementById('updateTimeText').textContent =
+          'Kur güncellenemedi.';
+      }
+    }
+
+    function calculateAll() {
+      clearError();
+
+      const tlAmount = parseFloat(document.getElementById('tlAmount').value);
+      const paidAmountRaw = document.getElementById('paidAmount').value.trim();
+      const paidAmount = paidAmountRaw === '' ? null : parseFloat(paidAmountRaw);
+
+      const marketRate = marketRates[selectedCurrency];
+      const salonRate = getSalonRate(selectedCurrency);
+      const symbol = currencySymbol(selectedCurrency);
+
+      if (marketRate == null || salonRate == null) {
+        showError('Kur bilgisi henüz hazır değil. Birkaç saniye bekleyin.');
+        return;
+      }
+
+      if (isNaN(tlAmount) || tlAmount <= 0) {
+        showError('Lütfen işlem tutarı (TL) girin.');
+        return;
+      }
+
+      const payableCurrency = tlAmount / salonRate;
+
+      document.getElementById('payableValue').textContent =
+        formatMoney(payableCurrency, 2) + ' ' + symbol;
+
+      if (paidAmount === null) {
+        document.getElementById('givenValue').textContent = '-';
+        document.getElementById('diffTitle').textContent = 'Para Üstü Döviz';
+        document.getElementById('diffValue').textContent = '-';
+        document.getElementById('tlTitle').textContent = 'TL Para Üstü';
+        document.getElementById('tlValue').textContent = '-';
+        document.getElementById('tlNote').textContent =
+          'Müşterinin verdiği döviz girilirse para üstü veya eksik hesaplanır.';
+        return;
+      }
+
+      if (isNaN(paidAmount) || paidAmount < 0) {
+        showError('Lütfen müşterinin verdiği dövizi doğru girin.');
+        return;
+      }
+
+      document.getElementById('givenValue').textContent =
+        formatMoney(paidAmount, 2) + ' ' + symbol;
+
+      const diffCurrency = paidAmount - payableCurrency;
+
+      if (diffCurrency >= 0) {
+        const tlChange = roundTl(diffCurrency * salonRate);
+
+        document.getElementById('diffTitle').textContent = 'Para Üstü Döviz';
+        document.getElementById('diffValue').textContent =
+          formatMoney(diffCurrency, 2) + ' ' + symbol;
+
+        document.getElementById('tlTitle').textContent = 'TL Para Üstü';
+        document.getElementById('tlValue').textContent =
+          formatMoney(tlChange, 0) + ' TL';
+
+        document.getElementById('tlNote').textContent =
+          'TL para üstü tam sayıya yuvarlanır.';
+      } else {
+        const missingCurrency = Math.abs(diffCurrency);
+
+        document.getElementById('diffTitle').textContent = 'Eksik Döviz';
+        document.getElementById('diffValue').textContent =
+          formatMoney(missingCurrency, 2) + ' ' + symbol;
+
+        document.getElementById('tlTitle').textContent = 'Eksik TL Karşılığı';
+        document.getElementById('tlValue').textContent =
+          formatMoney(roundTl(missingCurrency * salonRate), 0) + ' TL';
+
+        document.getElementById('tlNote').textContent =
+          'Müşterinin ödemesi gereken eksik tutar.';
+      }
+    }
+
+    updateLabels();
+    resetResultsOnly();
+    fetchRates();
+
+    setInterval(fetchRates, 10 * 60 * 1000);
+  </script>
 </body>
 </html>
