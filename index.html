@@ -9,19 +9,19 @@ body{
 font-family:Arial;
 background:#f4f4f4;
 text-align:center;
-margin-top:80px;
+margin-top:60px;
 }
 
 .box{
 background:white;
 padding:40px;
-width:300px;
+width:320px;
 margin:auto;
 border-radius:10px;
 box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
-input,select,button{
+input,button{
 width:100%;
 padding:12px;
 margin-top:10px;
@@ -37,7 +37,7 @@ border-radius:5px;
 
 .result{
 margin-top:20px;
-font-size:22px;
+font-size:20px;
 font-weight:bold;
 }
 </style>
@@ -47,15 +47,13 @@ font-weight:bold;
 
 <div class="box">
 
-<h2>Döviz Hesapla</h2>
+<h2>Euro Hesapla</h2>
 
-<input id="tl" placeholder="TL gir">
+<input id="tl" placeholder="Hizmet TL fiyatı">
 
-<select id="kur">
-<option value="36">Dolar</option>
-<option value="39">Euro</option>
-<option value="45">Sterlin</option>
-</select>
+<input id="kur" placeholder="Euro kuru (örnek 50.20)" value="50.20">
+
+<input id="verilen" placeholder="Müşteri verdiği € (opsiyonel)">
 
 <button onclick="hesapla()">Hesapla</button>
 
@@ -67,14 +65,29 @@ font-weight:bold;
 
 function hesapla(){
 
-var tl=document.getElementById("tl").value;
+var tl = parseFloat(document.getElementById("tl").value);
 
-var kur=document.getElementById("kur").value;
+var kur = parseFloat(document.getElementById("kur").value);
 
-var sonuc=tl/kur;
+var verilen = parseFloat(document.getElementById("verilen").value);
 
-document.getElementById("sonuc").innerHTML=
-sonuc.toFixed(2);
+var gerekenEuro = tl / kur;
+
+var sonuc = "Gereken €: " + gerekenEuro.toFixed(2);
+
+if(verilen){
+
+var paraUstuEuro = verilen - gerekenEuro;
+
+var paraUstuTL = paraUstuEuro * kur;
+
+sonuc += "<br>Para üstü €: " + paraUstuEuro.toFixed(2);
+
+sonuc += "<br>TL iade: " + paraUstuTL.toFixed(0) + " TL";
+
+}
+
+document.getElementById("sonuc").innerHTML = sonuc;
 
 }
 
