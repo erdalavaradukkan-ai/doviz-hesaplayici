@@ -453,31 +453,45 @@
     const sembol = tur === "EUR" ? "€" : tur === "USD" ? "$" : "£";
 
     document.getElementById("odenecek").textContent = odeme.toFixed(2) + " " + sembol;
-    document.getElementById("verdi").textContent = verdi.toFixed(2) + " " + sembol;
+    document.getElementById("verdi").textContent = verdi.toFixed(2) + " " + sembol;function hesapla(){
+  const tur = document.getElementById("dovizTuru").value;
+  const tl = parseFloat(document.getElementById("tl").value) || 0;
+  const verdi = parseFloat(document.getElementById("doviz").value) || 0;
 
-    if (ust >= 0){
-      document.getElementById("ustu").textContent = ust.toFixed(2) + " " + sembol;
-      document.getElementById("tlustu").textContent = Math.round(tlUstu) + " TL";
-    } else {
-      document.getElementById("ustu").textContent = "Eksik " + Math.abs(ust).toFixed(2) + " " + sembol;
-      document.getElementById("tlustu").textContent = "Eksik " + Math.abs(Math.round(tlUstu)) + " TL";
-    }
-  }
-
-  function temizle(){
-    document.getElementById("dovizTuru").value = "EUR";
-    document.getElementById("tl").value = "";
-    document.getElementById("doviz").value = "";
-    document.getElementById("odenecek").textContent = "0.00";
+  if (tl <= 0 || verdi <= 0){
+    document.getElementById("odenecek").textContent = "Tutar girin";
     document.getElementById("verdi").textContent = "0.00";
     document.getElementById("ustu").textContent = "0.00";
     document.getElementById("tlustu").textContent = "0 TL";
+    return;
   }
 
-  window.onload = function(){
-    kurCek();
-    setInterval(kurCek, 600000);
-  };
+  let alisKur = kurlar[tur];
+
+  if (tur === "EUR" || tur === "USD"){
+    alisKur -= 1;
+  } else if (tur === "GBP"){
+    alisKur -= 1.20;
+  }
+
+  const odeme = tl / alisKur;
+  const ust = verdi - odeme;
+  const tlUstu = ust * alisKur;
+
+  const sembol = tur === "EUR" ? "€" : tur === "USD" ? "$" : "£";
+
+  document.getElementById("odenecek").textContent = odeme.toFixed(2) + " " + sembol;
+  document.getElementById("verdi").textContent = verdi.toFixed(2) + " " + sembol;
+
+  if (ust >= 0){
+    document.getElementById("ustu").textContent = ust.toFixed(2) + " " + sembol;
+    document.getElementById("tlustu").textContent = Math.round(tlUstu) + " TL";
+  } else {
+    document.getElementById("ustu").textContent = "Eksik " + Math.abs(ust).toFixed(2) + " " + sembol;
+    document.getElementById("tlustu").textContent = "Eksik " + Math.abs(Math.round(tlUstu)) + " TL";
+  }
+}
+
 </script>
 
 </body>
