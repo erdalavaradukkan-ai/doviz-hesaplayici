@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Döviz Hesaplayıcı</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f4f4f4;
+text-align:center;
+margin-top:80px;
+}
+
+.box{
+background:white;
+padding:40px;
+width:300px;
+margin:auto;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+input,select,button{
+width:100%;
+padding:12px;
+margin-top:10px;
+font-size:16px;
+}
+
+button{
+background:#222;
+color:white;
+border:none;
+border-radius:5px;
+}
+
+.result{
+margin-top:20px;
+font-size:22px;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Döviz Hesapla</h2>
+
+<input id="tl" placeholder="TL gir">
+
+<select id="kur">
+<option value="36">Dolar</option>
+<option value="39">Euro</option>
+<option value="45">Sterlin</option>
+</select>
+
+<button onclick="hesapla()">Hesapla</button>
+
+<div class="result" id="sonuc"></div>
+
+</div>
+
+<script>
+
+function hesapla(){
+
+var tl=document.getElementById("tl").value;
+
+var kur=document.getElementById("kur").value;
+
+var sonuc=tl/kur;
+
+document.getElementById("sonuc").innerHTML=
+sonuc.toFixed(2);
+
+}
+
+</script>
+
+</body>
+</html>
