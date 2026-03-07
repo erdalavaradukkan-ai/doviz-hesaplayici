@@ -15,99 +15,75 @@ padding:0;
 }
 
 .container{
-max-width:700px;
+max-width:650px;
 margin:auto;
-padding:10px;
+padding:15px;
 }
 
 .card{
 background:white;
 border-radius:12px;
-box-shadow:0 5px 15px rgba(0,0,0,0.08);
-padding:14px;
+padding:20px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
 
-.header{
-background:#eef2f7;
-padding:10px;
-border-radius:8px;
-font-size:16px;
-font-weight:bold;
-margin-bottom:10px;
+h2{
+text-align:center;
+margin-bottom:15px;
 }
 
-.tabs{
-display:flex;
-gap:6px;
-margin-bottom:10px;
-}
-
-.tabs button{
-flex:1;
-padding:10px;
-font-size:16px;
-border:none;
-border-radius:8px;
-background:#e5e7eb;
-font-weight:bold;
-}
-
-.tabs button.active{
-background:#2563eb;
-color:white;
-}
-
-input{
+.input{
 width:100%;
-padding:12px;
+padding:10px;
+margin:8px 0;
 font-size:18px;
-margin-bottom:10px;
 border-radius:8px;
 border:1px solid #ccc;
 }
 
-.buttons{
+.btn{
+width:48%;
+padding:12px;
+font-size:18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.btn-green{
+background:#28a745;
+color:white;
+}
+
+.btn-gray{
+background:#6c757d;
+color:white;
+}
+
+.row{
 display:flex;
-gap:6px;
-margin-bottom:10px;
-}
-
-.calc{
-flex:1;
-background:#22c55e;
-color:white;
-border:none;
-padding:12px;
-font-size:18px;
-border-radius:8px;
-font-weight:bold;
-}
-
-.reset{
-flex:1;
-background:#9ca3af;
-color:white;
-border:none;
-padding:12px;
-font-size:18px;
-border-radius:8px;
-font-weight:bold;
+justify-content:space-between;
+margin-top:10px;
 }
 
 .result{
-background:#eef5ff;
-padding:12px;
-border-radius:8px;
-font-size:22px;
-font-weight:bold;
-margin-bottom:8px;
+background:#f8f9fa;
+padding:15px;
+border-radius:10px;
+margin-top:12px;
+font-size:20px;
 }
 
-.small{
-background:#ecfdf5;
-padding:10px;
-border-radius:8px;
-font-size:18px;
+.highlight{
+background:#e8f5e9;
+font-weight:bold;
+}
+
+.note{
+margin-top:10px;
+font-size:14px;
+color:#666;
+text-align:center;
 }
 
 </style>
@@ -119,32 +95,42 @@ font-size:18px;
 
 <div class="card">
 
-<div class="header">
-Piyasa Kur: <span id="piyasa">51.19</span> TL  
-Salon Alış: <span id="salon">50.19</span> TL
+<h2>Döviz Hesaplayıcı</h2>
+
+<input id="tl" class="input" placeholder="İşlem Tutarı (TL)">
+
+<input id="doviz" class="input" placeholder="Müşteri Verdiği Döviz">
+
+<div class="row">
+
+<button class="btn btn-green" onclick="hesapla()">HESAPLA</button>
+
+<button class="btn btn-gray" onclick="temizle()">YENİ</button>
+
 </div>
 
-<div class="tabs">
-<button onclick="sec('EUR')" class="active" id="eur">EURO</button>
-<button onclick="sec('USD')" id="usd">USD</button>
-<button onclick="sec('GBP')" id="gbp">GBP</button>
+<div class="result">
+Ödenecek Döviz: <span id="odenecek">0</span>
 </div>
 
-<input id="tl" placeholder="İşlem Tutarı TL">
+<div class="row">
 
-<input id="doviz" placeholder="Müşteri verdiği döviz (örn 100)">
-
-<div class="buttons">
-<button class="calc" onclick="hesapla()">HESAPLA</button>
-<button class="reset" onclick="temizle()">YENİ</button>
+<div class="result">
+Müşteri Verdi: <span id="verdi">0</span>
 </div>
 
-<div class="result" id="odenecek">
--
+<div class="result">
+Para Üstü Döviz: <span id="ustu">0</span>
 </div>
 
-<div class="small" id="tlkarsilik">
--
+</div>
+
+<div class="result highlight">
+TL Para Üstü: <span id="tlustu">0</span>
+</div>
+
+<div class="note">
+Para üstü TL olarak verilir.
 </div>
 
 </div>
@@ -153,71 +139,43 @@ Salon Alış: <span id="salon">50.19</span> TL
 
 <script>
 
-let kur={
-EUR:51.19,
-USD:44.06,
-GBP:59.05
-}
-
-let secili="EUR"
-
-function sec(x){
-
-secili=x
-
-document.getElementById("eur").classList.remove("active")
-document.getElementById("usd").classList.remove("active")
-document.getElementById("gbp").classList.remove("active")
-
-document.getElementById(x.toLowerCase()).classList.add("active")
-
-let piyasa=kur[x]
-let salon=piyasa-1
-
-if(x=="GBP"){salon=piyasa-1.26}
-
-document.getElementById("piyasa").innerText=piyasa.toFixed(2)
-document.getElementById("salon").innerText=salon.toFixed(2)
-
-}
+let kur=51.20;
 
 function hesapla(){
 
-let tl=document.getElementById("tl").value
-let doviz=document.getElementById("doviz").value
+let tl=document.getElementById("tl").value;
 
-let piyasa=kur[secili]
-let salon=piyasa-1
+let verdi=document.getElementById("doviz").value;
 
-if(secili=="GBP"){salon=piyasa-1.26}
+let odeme=(tl/kur);
 
-if(tl!=""){
+let ust=verdi-odeme;
 
-let odenecek=(tl/salon)
+let tlustu=ust*kur;
 
-document.getElementById("odenecek").innerText=
-"Ödenecek: "+odenecek.toFixed(2)+" "+secili
+document.getElementById("odenecek").innerHTML=odeme.toFixed(2)+" €";
 
-}
+document.getElementById("verdi").innerHTML=verdi+" €";
 
-if(doviz!=""){
+document.getElementById("ustu").innerHTML=ust.toFixed(2)+" €";
 
-let tlk=doviz*salon
-
-document.getElementById("tlkarsilik").innerText=
-"TL Karşılığı: "+Math.round(tlk)+" TL"
-
-}
+document.getElementById("tlustu").innerHTML=Math.round(tlustu)+" TL";
 
 }
 
 function temizle(){
 
-document.getElementById("tl").value=""
-document.getElementById("doviz").value=""
+document.getElementById("tl").value="";
 
-document.getElementById("odenecek").innerText="-"
-document.getElementById("tlkarsilik").innerText="-"
+document.getElementById("doviz").value="";
+
+document.getElementById("odenecek").innerHTML="0";
+
+document.getElementById("verdi").innerHTML="0";
+
+document.getElementById("ustu").innerHTML="0";
+
+document.getElementById("tlustu").innerHTML="0";
 
 }
 
