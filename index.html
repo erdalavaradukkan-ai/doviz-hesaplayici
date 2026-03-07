@@ -1,111 +1,484 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Döviz Kasa Ekranı</title>
+
+<style>
+  *{
+    box-sizing:border-box;
+  }
+
+  body{
+    margin:0;
+    padding:10px;
+    font-family:Arial,sans-serif;
+    background:#e9edf3;
+    color:#1f2937;
+  }
+
+  .app{
+    max-width:1100px;
+    margin:auto;
+    background:#f4f6fa;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 6px 18px rgba(0,0,0,0.12);
+    border:1px solid #cfd7e3;
+  }
+
+  .topbar{
+    background:linear-gradient(180deg,#243f73,#1d3460);
+    color:#fff;
+    padding:14px 18px 10px;
+  }
+
+  .topbar-title{
+    text-align:center;
+    font-size:22px;
+    font-weight:700;
+    margin-bottom:10px;
+    letter-spacing:0.4px;
+  }
+
+  .rates{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-bottom:8px;
+  }
+
+  .rate-box{
+    text-align:center;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:12px;
+    padding:10px 8px;
+  }
+
+  .rate-box .code{
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:4px;
+  }
+
+  .rate-box .market{
+    font-size:15px;
+    font-weight:700;
+    color:#ffe082;
+    margin-bottom:2px;
+  }
+
+  .rate-box .buy{
+    font-size:14px;
+    font-weight:700;
+    color:#ffffff;
+  }
+
+  .updated{
+    text-align:center;
+    font-size:14px;
+    opacity:0.95;
+    margin-top:2px;
+  }
+
+  .content{
+    padding:16px;
+  }
+
+  .field-label{
+    font-size:14px;
+    font-weight:700;
+    color:#667085;
+    margin:10px 0 6px;
+    text-transform:uppercase;
+    letter-spacing:0.3px;
+  }
+
+  .select-wrap,
+  .input-wrap{
+    background:#fff;
+    border:1px solid #cfd7e3;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  select,
+  input{
+    width:100%;
+    border:none;
+    outline:none;
+    background:transparent;
+    padding:16px 18px;
+    font-size:22px;
+    font-weight:700;
+    color:#203864;
+  }
+
+  input::placeholder{
+    color:#9aa4b2;
+    font-weight:500;
+  }
+
+  .results{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-top:16px;
+  }
+
+  .result-box{
+    background:#243f73;
+    color:#fff;
+    border-radius:12px;
+    padding:14px 12px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .result-box.green{
+    background:#188c2f;
+  }
+
+  .result-box .title{
+    font-size:13px;
+    font-weight:700;
+    opacity:0.95;
+    margin-bottom:10px;
+    text-transform:uppercase;
+  }
+
+  .result-box .value{
+    font-size:34px;
+    font-weight:800;
+    line-height:1.1;
+    word-break:break-word;
+  }
+
+  .buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:18px;
+  }
+
+  button{
+    border:none;
+    border-radius:12px;
+    padding:18px 14px;
+    font-size:22px;
+    font-weight:800;
+    cursor:pointer;
+    transition:0.15s ease;
+  }
+
+  .btn-calc{
+    background:#239a2b;
+    color:#fff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+
+  .btn-reset{
+    background:#5c6778;
+    color:#fff;
+  }
+
+  button:active{
+    transform:scale(0.99);
+  }
+
+  .note{
+    text-align:center;
+    font-size:13px;
+    color:#667085;
+    padding:12px 14px 16px;
+    line-height:1.5;
+  }
+
+  @media (max-width: 900px){
+    .results{
+      grid-template-columns:repeat(2,1fr);
+    }
+
+    .result-box .value{
+      font-size:30px;
+    }
+  }
+
+  @media (max-width: 600px){
+    body{
+      padding:4px;
+    }
+
+    .app{
+      border-radius:12px;
+    }
+
+    .topbar{
+      padding:10px 10px 8px;
+    }
+
+    .topbar-title{
+      font-size:18px;
+      margin-bottom:8px;
+    }
+
+    .rates{
+      gap:6px;
+    }
+
+    .rate-box{
+      padding:8px 4px;
+      border-radius:8px;
+    }
+
+    .rate-box .code{
+      font-size:12px;
+    }
+
+    .rate-box .market,
+    .rate-box .buy{
+      font-size:12px;
+    }
+
+    .updated{
+      font-size:12px;
+    }
+
+    .content{
+      padding:10px;
+    }
+
+    .field-label{
+      font-size:12px;
+      margin:8px 0 4px;
+    }
+
+    select,
+    input{
+      padding:13px 14px;
+      font-size:18px;
+    }
+
+    .results{
+      grid-template-columns:repeat(2,1fr);
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .result-box{
+      padding:12px 8px;
+      border-radius:10px;
+    }
+
+    .result-box .title{
+      font-size:11px;
+      margin-bottom:6px;
+    }
+
+    .result-box .value{
+      font-size:22px;
+    }
+
+    .buttons{
+      gap:10px;
+      margin-top:14px;
+    }
+
+    button{
+      padding:14px 10px;
+      font-size:18px;
+      border-radius:10px;
+    }
+
+    .note{
+      font-size:11px;
+      padding:10px 10px 12px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <div class="topbar-title">CANLI PİYASA</div>
+
+    <div class="rates">
+      <div class="rate-box">
+        <div class="code">EUR</div>
+        <div class="market">Piyasa: <span id="piyasa-eur">51.20</span></div>
+        <div class="buy">Alış: <span id="alis-eur">50.20</span></div>
+      </div>
+
+      <div class="rate-box">
+        <div class="code">USD</div>
+        <div class="market">Piyasa: <span id="piyasa-usd">44.07</span></div>
+        <div class="buy">Alış: <span id="alis-usd">43.07</span></div>
+      </div>
+
+      <div class="rate-box">
+        <div class="code">GBP</div>
+        <div class="market">Piyasa: <span id="piyasa-gbp">59.10</span></div>
+        <div class="buy">Alış: <span id="alis-gbp">57.90</span></div>
+      </div>
+    </div>
+
+    <div class="updated">Son Güncelleme: <span id="update-time">--:--</span></div>
+  </div>
+
+  <div class="content">
+    <div class="field-label">Döviz Türü</div>
+    <div class="select-wrap">
+      <select id="dovizTuru">
+        <option value="EUR">EURO €</option>
+        <option value="USD">USD $</option>
+        <option value="GBP">GBP £</option>
+      </select>
+    </div>
+
+    <div class="field-label">İşlem Tutarı (TL)</div>
+    <div class="input-wrap">
+      <input id="tl" type="number" step="0.01" min="0" placeholder="Örn: 5000">
+    </div>
+
+    <div class="field-label">Müşteri Verdiği Döviz</div>
+    <div class="input-wrap">
+      <input id="doviz" type="number" step="0.01" min="0" placeholder="Örn: 120">
+    </div>
+
+    <div class="results">
+      <div class="result-box">
+        <div class="title">Ödenecek</div>
+        <div class="value" id="odenecek">0.00</div>
+      </div>
+
+      <div class="result-box">
+        <div class="title">Müşteri Verdi</div>
+        <div class="value" id="verdi">0.00</div>
+      </div>
+
+      <div class="result-box green">
+        <div class="title">Para Üstü Döviz</div>
+        <div class="value" id="ustu">0.00</div>
+      </div>
+
+      <div class="result-box">
+        <div class="title">TL Karşılığı</div>
+        <div class="value" id="tlustu">0 TL</div>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="btn-calc" onclick="hesapla()">HESAPLA</button>
+      <button class="btn-reset" onclick="temizle()">YENİ İŞLEM</button>
+    </div>
+  </div>
+
+  <div class="note">
+    Euro ve Dolar için piyasa kurundan 1 TL, Sterlin için 1.20 TL düşülerek alış kuru hesaplanır.
+  </div>
+</div>
+
 <script>
+  let kurlar = {
+    EUR: 51.20,
+    USD: 44.07,
+    GBP: 59.10
+  };
 
-let kurlar = {
-EUR: 51.20,
-USD: 44.07,
-GBP: 59.10
-};
+  function formatSaat(dateObj){
+    const saat = String(dateObj.getHours()).padStart(2,"0");
+    const dakika = String(dateObj.getMinutes()).padStart(2,"0");
+    return saat + ":" + dakika;
+  }
 
-async function kurCek(){
+  async function kurCek(){
+    try{
+      const [eurRes, usdRes, gbpRes] = await Promise.all([
+        fetch("https://api.exchangerate.host/latest?base=EUR&symbols=TRY"),
+        fetch("https://api.exchangerate.host/latest?base=USD&symbols=TRY"),
+        fetch("https://api.exchangerate.host/latest?base=GBP&symbols=TRY")
+      ]);
 
-try{
+      const eurData = await eurRes.json();
+      const usdData = await usdRes.json();
+      const gbpData = await gbpRes.json();
 
-let eur = await fetch("https://api.exchangerate.host/latest?base=EUR&symbols=TRY");
-let eurData = await eur.json();
+      if (eurData?.rates?.TRY) kurlar.EUR = eurData.rates.TRY;
+      if (usdData?.rates?.TRY) kurlar.USD = usdData.rates.TRY;
+      if (gbpData?.rates?.TRY) kurlar.GBP = gbpData.rates.TRY;
+    } catch (e) {
+      console.log("Kur çekilemedi, mevcut değerler kullanılacak.");
+    }
 
-let usd = await fetch("https://api.exchangerate.host/latest?base=USD&symbols=TRY");
-let usdData = await usd.json();
+    guncelleTablo();
+    document.getElementById("update-time").textContent = formatSaat(new Date());
+  }
 
-let gbp = await fetch("https://api.exchangerate.host/latest?base=GBP&symbols=TRY");
-let gbpData = await gbp.json();
+  function guncelleTablo(){
+    document.getElementById("piyasa-eur").textContent = kurlar.EUR.toFixed(2);
+    document.getElementById("alis-eur").textContent = (kurlar.EUR - 1).toFixed(2);
 
-kurlar.EUR = eurData.rates.TRY;
-kurlar.USD = usdData.rates.TRY;
-kurlar.GBP = gbpData.rates.TRY;
+    document.getElementById("piyasa-usd").textContent = kurlar.USD.toFixed(2);
+    document.getElementById("alis-usd").textContent = (kurlar.USD - 1).toFixed(2);
 
-guncelleTablo();
+    document.getElementById("piyasa-gbp").textContent = kurlar.GBP.toFixed(2);
+    document.getElementById("alis-gbp").textContent = (kurlar.GBP - 1.20).toFixed(2);
+  }
 
-}
-catch(e){
-console.log("Kur çekilemedi, son değer kullanılıyor.");
-}
+  function hesapla(){
+    const tur = document.getElementById("dovizTuru").value;
+    const tl = parseFloat(document.getElementById("tl").value) || 0;
+    const verdi = parseFloat(document.getElementById("doviz").value) || 0;
 
-}
+    if (tl <= 0 || verdi <= 0){
+      alert("Pozitif tutar girin.");
+      return;
+    }
 
-function guncelleTablo(){
+    let alisKur = kurlar[tur];
+    if (tur === "EUR" || tur === "USD"){
+      alisKur -= 1;
+    } else if (tur === "GBP"){
+      alisKur -= 1.20;
+    }
 
-document.getElementById("piyasa-eur").textContent = kurlar.EUR.toFixed(2);
-document.getElementById("alis-eur").textContent = (kurlar.EUR - 1).toFixed(2);
+    const odeme = tl / alisKur;
+    const ust = verdi - odeme;
+    const tlUstu = ust * alisKur;
 
-document.getElementById("piyasa-usd").textContent = kurlar.USD.toFixed(2);
-document.getElementById("alis-usd").textContent = (kurlar.USD - 1).toFixed(2);
+    const sembol = tur === "EUR" ? "€" : tur === "USD" ? "$" : "£";
 
-document.getElementById("piyasa-gbp").textContent = kurlar.GBP.toFixed(2);
-document.getElementById("alis-gbp").textContent = (kurlar.GBP - 1.20).toFixed(2);
+    document.getElementById("odenecek").textContent = odeme.toFixed(2) + " " + sembol;
+    document.getElementById("verdi").textContent = verdi.toFixed(2) + " " + sembol;
 
-}
+    if (ust >= 0){
+      document.getElementById("ustu").textContent = ust.toFixed(2) + " " + sembol;
+      document.getElementById("tlustu").textContent = Math.round(tlUstu) + " TL";
+    } else {
+      document.getElementById("ustu").textContent = "Eksik " + Math.abs(ust).toFixed(2) + " " + sembol;
+      document.getElementById("tlustu").textContent = "Eksik " + Math.abs(Math.round(tlUstu)) + " TL";
+    }
+  }
 
-window.onload = function(){
+  function temizle(){
+    document.getElementById("dovizTuru").value = "EUR";
+    document.getElementById("tl").value = "";
+    document.getElementById("doviz").value = "";
+    document.getElementById("odenecek").textContent = "0.00";
+    document.getElementById("verdi").textContent = "0.00";
+    document.getElementById("ustu").textContent = "0.00";
+    document.getElementById("tlustu").textContent = "0 TL";
+  }
 
-kurCek();
-
-setInterval(kurCek,600000);
-
-};
-
-function hesapla(){
-
-const tur = document.getElementById("dovizTuru").value;
-
-let tl = parseFloat(document.getElementById("tl").value) || 0;
-let verdi = parseFloat(document.getElementById("doviz").value) || 0;
-
-if(tl<=0 || verdi<=0){
-alert("Pozitif tutar girin.");
-return;
-}
-
-let alisKur = kurlar[tur];
-
-if(tur==="EUR" || tur==="USD"){
-alisKur -= 1;
-}
-else if(tur==="GBP"){
-alisKur -= 1.20;
-}
-
-let odeme = tl / alisKur;
-let ust = verdi - odeme;
-let tlUstu = ust * alisKur;
-
-const sembol = tur==="EUR" ? "€" : tur==="USD" ? "$" : "£";
-
-document.getElementById("odenecek").innerHTML = odeme.toFixed(2)+" "+sembol;
-document.getElementById("verdi").innerHTML = verdi.toFixed(2)+" "+sembol;
-
-if(ust>=0){
-document.getElementById("ustu").innerHTML = ust.toFixed(2)+" "+sembol;
-document.getElementById("tlustu").innerHTML = Math.round(tlUstu)+" TL";
-}
-else{
-document.getElementById("ustu").innerHTML = "Eksik: "+Math.abs(ust).toFixed(2)+" "+sembol;
-document.getElementById("tlustu").innerHTML = "Eksik: "+Math.abs(Math.round(tlUstu))+" TL";
-}
-
-}
-
-function temizle(){
-
-document.getElementById("tl").value="";
-document.getElementById("doviz").value="";
-
-document.getElementById("odenecek").innerHTML="0.00";
-document.getElementById("verdi").innerHTML="0.00";
-document.getElementById("ustu").innerHTML="0.00";
-document.getElementById("tlustu").innerHTML="0";
-
-document.getElementById("dovizTuru").value="EUR";
-
-}
-
+  window.onload = function(){
+    kurCek();
+    setInterval(kurCek, 600000);
+  };
 </script>
+
+</body>
+</html>
