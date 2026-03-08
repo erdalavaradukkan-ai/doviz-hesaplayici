@@ -1,381 +1,295 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Döviz Kıyas Ekranı</title>
 
 <style>
-  * { box-sizing: border-box; }
+*{box-sizing:border-box}
 
-  body{
-    margin:0;
-    padding:10px;
-    font-family:Arial,sans-serif;
-    background:#e9edf3;
-    color:#1f2937;
-  }
+body{
+margin:0;
+font-family:Arial;
+background:#e9edf3;
+padding:10px;
+}
 
-  .app{
-    max-width:1100px;
-    margin:auto;
-    background:#f4f6fa;
-    border-radius:18px;
-    overflow:hidden;
-    box-shadow:0 6px 18px rgba(0,0,0,0.12);
-    border:1px solid #cfd7e3;
-  }
+.app{
+max-width:1100px;
+margin:auto;
+background:#f4f6fa;
+border-radius:18px;
+box-shadow:0 6px 18px rgba(0,0,0,0.12);
+overflow:hidden;
+}
 
-  .topbar{
-    background:linear-gradient(180deg,#243f73,#1d3460);
-    color:#fff;
-    padding:18px 18px 14px;
-    text-align:center;
-  }
+.topbar{
+background:#243f73;
+color:white;
+padding:18px;
+text-align:center;
+font-weight:800;
+font-size:22px;
+}
 
-  .topbar-title{
-    font-size:22px;
-    font-weight:800;
-    letter-spacing:0.4px;
-  }
+.content{
+padding:18px;
+}
 
-  .content{
-    padding:18px;
-  }
+.label{
+font-size:14px;
+font-weight:700;
+margin:10px 0 6px;
+color:#667085;
+}
 
-  .field-label{
-    font-size:15px;
-    font-weight:700;
-    color:#667085;
-    margin:10px 0 6px;
-    text-transform:uppercase;
-    letter-spacing:0.3px;
-  }
+.inputbox{
+background:white;
+border-radius:12px;
+border:1px solid #cfd7e3;
+}
 
-  .input-wrap{
-    background:#fff;
-    border:1px solid #cfd7e3;
-    border-radius:14px;
-    overflow:hidden;
-    box-shadow:0 2px 6px rgba(0,0,0,0.05);
-  }
+input{
+width:100%;
+border:none;
+padding:18px;
+font-size:22px;
+font-weight:700;
+outline:none;
+}
 
-  input{
-    width:100%;
-    border:none;
-    outline:none;
-    background:transparent;
-    padding:18px 20px;
-    font-size:22px;
-    font-weight:700;
-    color:#203864;
-  }
+.cards{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:14px;
+margin-top:20px;
+}
 
-  input::placeholder{
-    color:#9aa4b2;
-    font-weight:500;
-  }
+.card{
+border-radius:14px;
+padding:18px;
+color:white;
+text-align:center;
+}
 
-  .cards{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:14px;
-    margin-top:18px;
-  }
+.usd{background:#243f73}
+.eur{background:#4d8750}
+.gbp{background:#243f73}
 
-  .card{
-    border-radius:14px;
-    padding:16px 14px;
-    color:#fff;
-    text-align:center;
-    box-shadow:0 2px 8px rgba(0,0,0,0.08);
-  }
+.title{
+font-size:18px;
+font-weight:800;
+margin-bottom:10px;
+}
 
-  .card.usd, .card.gbp{
-    background:#243f73;
-  }
+.big{
+font-size:26px;
+font-weight:800;
+margin:10px 0;
+}
 
-  .card.eur{
-    background:#4d8750;
-  }
+.small{
+font-size:16px;
+}
 
-  .card .title{
-    font-size:18px;
-    font-weight:800;
-    margin-bottom:12px;
-  }
+.diff{
+margin-top:10px;
+font-weight:800;
+font-size:18px;
+}
 
-  .card .sub{
-    font-size:14px;
-    opacity:0.95;
-    margin-bottom:6px;
-  }
+.green{color:#7CFF9E}
+.red{color:#FFB3B3}
 
-  .card .service-tl{
-    font-size:18px;
-    font-weight:700;
-    margin-bottom:4px;
-  }
+.rates{
+background:white;
+margin-top:20px;
+padding:14px;
+border-radius:12px;
+text-align:center;
+}
 
-  .card .service-value{
-    font-size:26px;
-    font-weight:800;
-    margin-bottom:16px;
-    line-height:1.15;
-  }
+.rates span{
+margin:0 20px;
+font-weight:800;
+font-size:18px;
+}
 
-  .card .customer-value{
-    font-size:18px;
-    font-weight:700;
-  }
+.buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:20px;
+}
 
-  .rates-panel{
-    margin-top:18px;
-    background:#fff;
-    border:1px solid #d7dee8;
-    border-radius:14px;
-    padding:14px 16px;
-  }
+button{
+border:none;
+padding:16px;
+font-size:20px;
+font-weight:800;
+border-radius:10px;
+cursor:pointer;
+}
 
-  .rates-title{
-    text-align:center;
-    font-size:16px;
-    font-weight:800;
-    color:#42526b;
-    margin-bottom:12px;
-    text-transform:uppercase;
-    letter-spacing:0.4px;
-  }
+.calc{background:#239a2b;color:white}
+.reset{background:#5c6778;color:white}
 
-  .rates{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:8px;
-    text-align:center;
-  }
-
-  .rate-item{
-    font-size:18px;
-    font-weight:800;
-    color:#243f73;
-  }
-
-  .update-line{
-    text-align:center;
-    margin-top:10px;
-    font-size:13px;
-    color:#667085;
-  }
-
-  .buttons{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px;
-    margin-top:18px;
-  }
-
-  button{
-    border:none;
-    border-radius:12px;
-    padding:16px 14px;
-    font-size:20px;
-    font-weight:800;
-    cursor:pointer;
-  }
-
-  .btn-calc{
-    background:#239a2b;
-    color:#fff;
-  }
-
-  .btn-reset{
-    background:#5c6778;
-    color:#fff;
-  }
-
-  @media (max-width: 900px){
-    .cards{
-      grid-template-columns:1fr;
-    }
-  }
-
-  @media (max-width: 600px){
-    body{ padding:4px; }
-    .content{ padding:10px; }
-    .topbar-title{ font-size:18px; }
-    input{ font-size:18px; padding:14px 16px; }
-    .card .service-value{ font-size:22px; }
-    .card .customer-value{ font-size:17px; }
-    .rate-item{ font-size:16px; }
-    .buttons{ grid-template-columns:1fr 1fr; gap:10px; }
-    button{ font-size:17px; padding:13px 10px; }
-  }
+@media(max-width:900px){
+.cards{grid-template-columns:1fr}
+}
 </style>
 </head>
+
 <body>
 
 <div class="app">
-  <div class="topbar">
-    <div class="topbar-title">İŞLEM TUTARI</div>
-  </div>
 
-  <div class="content">
-    <div class="field-label">İşlem Tutarı (TL)</div>
-    <div class="input-wrap">
-      <input id="tl" type="number" step="0.01" min="0" placeholder="Örn: 8000">
-    </div>
+<div class="topbar">İŞLEM TUTARI</div>
 
-    <div class="field-label">Müşterinin Söylediği Rakam</div>
-    <div class="input-wrap">
-      <input id="rakam" type="number" step="0.01" min="0" placeholder="Örn: 100">
-    </div>
+<div class="content">
 
-    <div class="cards">
-      <div class="card usd">
-        <div class="title">USD</div>
-        <div class="sub">Yaklaşık</div>
-        <div class="service-tl" id="service-tl-usd">0 TL</div>
-        <div class="service-value" id="service-usd">= 0.00 $</div>
-        <div class="customer-value" id="customer-usd">0 $ = 0 TL</div>
-      </div>
+<div class="label">İşlem Tutarı (TL)</div>
+<div class="inputbox">
+<input id="tl" placeholder="Örn 9.000">
+</div>
 
-      <div class="card eur">
-        <div class="title">EUR</div>
-        <div class="sub">Yaklaşık</div>
-        <div class="service-tl" id="service-tl-eur">0 TL</div>
-        <div class="service-value" id="service-eur">= 0.00 €</div>
-        <div class="customer-value" id="customer-eur">0 € = 0 TL</div>
-      </div>
+<div class="label">ÖDENEN TUTAR</div>
+<div class="inputbox">
+<input id="rakam" placeholder="Örn 200">
+</div>
 
-      <div class="card gbp">
-        <div class="title">GBP</div>
-        <div class="sub">Yaklaşık</div>
-        <div class="service-tl" id="service-tl-gbp">0 TL</div>
-        <div class="service-value" id="service-gbp">= 0.00 £</div>
-        <div class="customer-value" id="customer-gbp">0 £ = 0 TL</div>
-      </div>
-    </div>
+<div class="cards">
 
-    <div class="rates-panel">
-      <div class="rates-title">Güncel Kurlar</div>
-      <div class="rates">
-        <div class="rate-item">€ <span id="rate-eur">51.20</span> TL</div>
-        <div class="rate-item">$ <span id="rate-usd">44.07</span> TL</div>
-        <div class="rate-item">£ <span id="rate-gbp">59.10</span> TL</div>
-      </div>
-      <div class="update-line">Son güncelleme: <span id="update-time">--:--</span></div>
-    </div>
+<div class="card usd">
+<div class="title">USD</div>
+<div class="big" id="usd1">0 $</div>
+<div class="small" id="usd2">0 $ = 0 TL</div>
+<div class="diff" id="usd3"></div>
+</div>
 
-    <div class="buttons">
-      <button class="btn-calc" onclick="hesapla()">HESAPLA</button>
-      <button class="btn-reset" onclick="temizle()">YENİ</button>
-    </div>
-  </div>
+<div class="card eur">
+<div class="title">EUR</div>
+<div class="big" id="eur1">0 €</div>
+<div class="small" id="eur2">0 € = 0 TL</div>
+<div class="diff" id="eur3"></div>
+</div>
+
+<div class="card gbp">
+<div class="title">GBP</div>
+<div class="big" id="gbp1">0 £</div>
+<div class="small" id="gbp2">0 £ = 0 TL</div>
+<div class="diff" id="gbp3"></div>
+</div>
+
+</div>
+
+<div class="rates">
+<span>€ <span id="re">0</span></span>
+<span>$ <span id="ru">0</span></span>
+<span>£ <span id="rg">0</span></span>
+</div>
+
+<div class="buttons">
+<button class="calc" onclick="hesapla()">HESAPLA</button>
+<button class="reset" onclick="temizle()">YENİ</button>
+</div>
+
+</div>
 </div>
 
 <script>
-  let kurlar = {
-    EUR: 51.20,
-    USD: 44.07,
-    GBP: 59.10
-  };
 
-  function formatSaat(dateObj){
-    const saat = String(dateObj.getHours()).padStart(2,"0");
-    const dakika = String(dateObj.getMinutes()).padStart(2,"0");
-    return saat + ":" + dakika;
-  }
+let kur={EUR:0,USD:0,GBP:0}
 
-  async function kurCek(){
-    try{
-      const [eurRes, usdRes, gbpRes] = await Promise.all([
-        fetch("https://api.frankfurter.dev/v1/latest?base=EUR&symbols=TRY"),
-        fetch("https://api.frankfurter.dev/v1/latest?base=USD&symbols=TRY"),
-        fetch("https://api.frankfurter.dev/v1/latest?base=GBP&symbols=TRY")
-      ]);
+function format(x){
+return x.toLocaleString('tr-TR')
+}
 
-      const eurData = await eurRes.json();
-      const usdData = await usdRes.json();
-      const gbpData = await gbpRes.json();
+async function kurCek(){
 
-      if (eurData && eurData.rates && eurData.rates.TRY) kurlar.EUR = eurData.rates.TRY;
-      if (usdData && usdData.rates && usdData.rates.TRY) kurlar.USD = usdData.rates.TRY;
-      if (gbpData && gbpData.rates && gbpData.rates.TRY) kurlar.GBP = gbpData.rates.TRY;
-    } catch (e) {
-      console.log("Kur alınamadı, son değerlerle devam ediliyor.");
-    }
+try{
 
-    guncelleKurlar();
-  }
+let e=await fetch("https://api.frankfurter.dev/v1/latest?base=EUR&symbols=TRY")
+let u=await fetch("https://api.frankfurter.dev/v1/latest?base=USD&symbols=TRY")
+let g=await fetch("https://api.frankfurter.dev/v1/latest?base=GBP&symbols=TRY")
 
-  function guncelleKurlar(){
-    document.getElementById("rate-eur").textContent = kurlar.EUR.toFixed(2);
-    document.getElementById("rate-usd").textContent = kurlar.USD.toFixed(2);
-    document.getElementById("rate-gbp").textContent = kurlar.GBP.toFixed(2);
-    document.getElementById("update-time").textContent = formatSaat(new Date());
-  }
+let ej=await e.json()
+let uj=await u.json()
+let gj=await g.json()
 
-  function hesapla(){
-    const tl = parseFloat(document.getElementById("tl").value) || 0;
-    const rakam = parseFloat(document.getElementById("rakam").value) || 0;
+kur.EUR=ej.rates.TRY
+kur.USD=uj.rates.TRY
+kur.GBP=gj.rates.TRY
 
-    if (tl <= 0){
-      document.getElementById("service-tl-usd").textContent = "Tutar girin";
-      document.getElementById("service-tl-eur").textContent = "Tutar girin";
-      document.getElementById("service-tl-gbp").textContent = "Tutar girin";
+document.getElementById("re").innerText=kur.EUR.toFixed(2)
+document.getElementById("ru").innerText=kur.USD.toFixed(2)
+document.getElementById("rg").innerText=kur.GBP.toFixed(2)
 
-      document.getElementById("service-usd").textContent = "= 0.00 $";
-      document.getElementById("service-eur").textContent = "= 0.00 €";
-      document.getElementById("service-gbp").textContent = "= 0.00 £";
+}catch{}
 
-      document.getElementById("customer-usd").textContent = "0 $ = 0 TL";
-      document.getElementById("customer-eur").textContent = "0 € = 0 TL";
-      document.getElementById("customer-gbp").textContent = "0 £ = 0 TL";
-      return;
-    }
+}
 
-    const serviceUSD = tl / kurlar.USD;
-    const serviceEUR = tl / kurlar.EUR;
-    const serviceGBP = tl / kurlar.GBP;
+function hesapla(){
 
-    const customerUSD = rakam * kurlar.USD;
-    const customerEUR = rakam * kurlar.EUR;
-    const customerGBP = rakam * kurlar.GBP;
+let tl=parseFloat(document.getElementById("tl").value.replace(".",""))||0
+let r=parseFloat(document.getElementById("rakam").value)||0
 
-    document.getElementById("service-tl-usd").textContent = Math.round(tl) + " TL";
-    document.getElementById("service-tl-eur").textContent = Math.round(tl) + " TL";
-    document.getElementById("service-tl-gbp").textContent = Math.round(tl) + " TL";
+if(tl>0) document.getElementById("tl").value=format(tl)
 
-    document.getElementById("service-usd").textContent = "= " + serviceUSD.toFixed(2) + " $";
-    document.getElementById("service-eur").textContent = "= " + serviceEUR.toFixed(2) + " €";
-    document.getElementById("service-gbp").textContent = "= " + serviceGBP.toFixed(2) + " £";
+let usd=tl/kur.USD
+let eur=tl/kur.EUR
+let gbp=tl/kur.GBP
 
-    document.getElementById("customer-usd").textContent = rakam + " $ = " + Math.round(customerUSD) + " TL";
-    document.getElementById("customer-eur").textContent = rakam + " € = " + Math.round(customerEUR) + " TL";
-    document.getElementById("customer-gbp").textContent = rakam + " £ = " + Math.round(customerGBP) + " TL";
-  }
+let usdTL=r*kur.USD
+let eurTL=r*kur.EUR
+let gbpTL=r*kur.GBP
 
-  function temizle(){
-    document.getElementById("tl").value = "";
-    document.getElementById("rakam").value = "";
+document.getElementById("usd1").innerText=usd.toFixed(2)+" $"
+document.getElementById("eur1").innerText=eur.toFixed(2)+" €"
+document.getElementById("gbp1").innerText=gbp.toFixed(2)+" £"
 
-    document.getElementById("service-tl-usd").textContent = "0 TL";
-    document.getElementById("service-tl-eur").textContent = "0 TL";
-    document.getElementById("service-tl-gbp").textContent = "0 TL";
+document.getElementById("usd2").innerText=r+" $ = "+Math.round(usdTL)+" TL"
+document.getElementById("eur2").innerText=r+" € = "+Math.round(eurTL)+" TL"
+document.getElementById("gbp2").innerText=r+" £ = "+Math.round(gbpTL)+" TL"
 
-    document.getElementById("service-usd").textContent = "= 0.00 $";
-    document.getElementById("service-eur").textContent = "= 0.00 €";
-    document.getElementById("service-gbp").textContent = "= 0.00 £";
+if(tl>0){
 
-    document.getElementById("customer-usd").textContent = "0 $ = 0 TL";
-    document.getElementById("customer-eur").textContent = "0 € = 0 TL";
-    document.getElementById("customer-gbp").textContent = "0 £ = 0 TL";
-  }
+diff("usd3",usdTL-tl)
+diff("eur3",eurTL-tl)
+diff("gbp3",gbpTL-tl)
 
-  window.onload = function(){
-    kurCek();
-    setInterval(kurCek, 600000);
-  };
+}
+
+}
+
+function diff(id,v){
+
+let e=document.getElementById(id)
+
+if(v>0){
+e.innerText="Fazla "+Math.round(v)+" TL"
+e.className="diff green"
+}
+else if(v<0){
+e.innerText="Eksik "+Math.abs(Math.round(v))+" TL"
+e.className="diff red"
+}
+else{
+e.innerText="Tam"
+}
+
+}
+
+function temizle(){
+location.reload()
+}
+
+window.onload=function(){
+kurCek()
+setInterval(kurCek,600000)
+}
+
 </script>
 
 </body>
